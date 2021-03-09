@@ -1,0 +1,16 @@
+library(KoNLP)
+yes24 <- readLines("output/yes24.txt", encoding = "UTF-8")
+yes24_ko <- gsub("[A-z]|[[:punct:]]|[[:digit:]]", "", yes24)
+head(yes24_ko)
+
+yes24_data <- extractNoun(yes24_ko)
+yes24_data <- unlist(yes24_data)
+yes24_data <- Filter(function(x) {(nchar(x) >= 2) & (nchar(x) < 5)}, yes24_data)
+yes24_table <- table(yes24_data)
+yes24_table <- sort(yes24_table, decreasing = T)
+yes24_final <- as.data.frame(yes24_table)
+head(yes24_final)
+
+library(wordcloud2)
+yes24_result <- wordcloud2(data = yes24_final)
+htmltools::save_html(yes24_result,"output/yes24.html")
